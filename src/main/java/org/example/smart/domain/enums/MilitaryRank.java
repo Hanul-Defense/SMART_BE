@@ -13,5 +13,5 @@ public enum MilitaryRank {
 	GA("원수"),
 	;
 
-	private String rank;
+	private final String rank;
 }
