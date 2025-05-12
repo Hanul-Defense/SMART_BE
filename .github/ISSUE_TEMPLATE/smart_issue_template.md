@@ -1,3 +1,12 @@
+---
+name: smart_issue_template
+about: Describe this issue template's purpose here.
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 ## What is this issue? 🛠
 이슈 설명
 
