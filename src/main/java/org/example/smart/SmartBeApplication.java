@@ -1,4 +1,4 @@
-package org.example.smart_be;
+package org.example.smart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
