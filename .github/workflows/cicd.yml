@@ -55,7 +55,8 @@ jobs:
 
     - name: restart spring
       run: |
-          ssh ec2-user@${{ secrets.DEV_WAS }} 
+          ssh ec2-user@${{ secrets.DEV_WAS }} '
           cd /home/ec2-user/workspace &&
-          sudo systemctl restart springboot    
+          sudo systemctl restart springboot
+          '
   
