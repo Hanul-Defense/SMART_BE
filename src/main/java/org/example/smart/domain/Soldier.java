@@ -1,6 +1,6 @@
 package org.example.smart.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.example.smart.domain.enums.MilitaryRank;
 
@@ -38,18 +38,18 @@ public class Soldier {
 	@Column(name = "service_number", nullable = false, length = 11)
 	private String serviceNumber;
 
-	@Column(name = "password", nullable = false, length = 20)
+	@Column(name = "password", nullable = false)
 	private String password;
 
 	@Column(name = "military_rank", nullable = false)
 	private MilitaryRank militaryRank;
 
 	@Column(name = "enlistment_date", nullable = false)
-	private LocalDateTime enlistmentDate;
+	private LocalDate enlistmentDate;
 
 	@Builder
 	public Soldier(Military military, String name, String serviceNumber, String password, MilitaryRank militaryRank,
-		LocalDateTime enlistmentDate) {
+		LocalDate enlistmentDate) {
 		this.military = military;
 		this.name = name;
 		this.serviceNumber = serviceNumber;
