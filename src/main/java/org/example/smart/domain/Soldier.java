@@ -38,7 +38,7 @@ public class Soldier {
 	@Column(name = "service_number", nullable = false, length = 11)
 	private String serviceNumber;
 
-	@Column(name = "password", nullable = false, length = 20)
+	@Column(name = "password", nullable = false)
 	private String password;
 
 	@Column(name = "military_rank", nullable = false)

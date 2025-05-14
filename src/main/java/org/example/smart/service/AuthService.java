@@ -23,7 +23,7 @@ public class AuthService {
 	public Soldier signUp(PostSignUpDto postSignUpDto) {
 
 		Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
-				MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryName()),
+				MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryBranch()),
 				postSignUpDto.militaryName(),
 				postSignUpDto.company(),
 				postSignUpDto.platoon())
