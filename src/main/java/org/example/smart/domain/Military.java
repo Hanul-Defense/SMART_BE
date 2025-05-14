@@ -26,9 +26,17 @@ public class Military {
 	@Column(name = "military_name", nullable = false, length = 30)
 	private String militaryName;
 
+	@Column(name = "company",nullable = false)
+	private Integer company;
+
+	@Column(name = "platoon", nullable = false)
+	private Integer platoon;
+
 	@Builder
-	public Military(MilitaryBranch militaryBranch, String militaryName) {
+	public Military(MilitaryBranch militaryBranch, String militaryName,Integer company,Integer platoon) {
 		this.militaryBranch = militaryBranch;
 		this.militaryName = militaryName;
+		this.company = company;
+		this.platoon = platoon;
 	}
 }
