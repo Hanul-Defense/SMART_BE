@@ -20,26 +20,29 @@ public class AuthService {
 	private final MilitaryRepository militaryRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public Soldier signUp(PostSignUpDto postSignUpDto) {
+	public ResponseSignUpDto signUp(PostSignUpDto postSignUpDto) {
 
-		Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
-				MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryBranch()),
-				postSignUpDto.militaryName(),
-				postSignUpDto.company(),
-				postSignUpDto.platoon())
-			.orElseThrow();
+		try {
+			Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
+					MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryBranch()),
+					postSignUpDto.militaryName(),
+					postSignUpDto.company(),
+					postSignUpDto.platoon())
+				.orElseThrow();
 
-		Soldier soldier = Soldier.builder()
-			.military(military)
-			.name(postSignUpDto.soldierName())
-			.serviceNumber(postSignUpDto.serviceNumber())
-			.password(passwordEncoder.encode(postSignUpDto.password()))
-			.enlistmentDate(postSignUpDto.enlistmentDate())
-			.militaryRank(MilitaryRank.getMilitaryRankByRank(postSignUpDto.militaryRank()))
-			.build();
+			Soldier soldier = Soldier.builder()
+				.military(military)
+				.name(postSignUpDto.soldierName())
+				.serviceNumber(postSignUpDto.serviceNumber())
+				.password(passwordEncoder.encode(postSignUpDto.password()))
+				.enlistmentDate(postSignUpDto.enlistmentDate())
+				.militaryRank(MilitaryRank.getMilitaryRankByRank(postSignUpDto.militaryRank()))
+				.build();
 
-		soldierRepository.save(soldier);
-
-		return soldier;
+			soldierRepository.save(soldier);
+		} catch (Exception e) {
+			return new ResponseSignUpDto(500,"회원가입에 실패했습니다.");
+		}
+		return new ResponseSignUpDto(201,"회원가입에 성공했습니다.");
 	}
 }
