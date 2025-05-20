@@ -15,9 +15,17 @@ public record BaseResponseDto<T>(
 	@JsonProperty(value = "data")
 	T data
 ) {
-	public static <T> BaseResponseDto<T> of(Integer code, String message, T data) {
+	public static <T> BaseResponseDto<T> ok(String message, T data) {
 		return BaseResponseDto.<T>builder()
-			.code(code)
+			.code(200)
+			.message(message)
+			.data(data)
+			.build();
+	}
+
+	public static <T> BaseResponseDto<T>created(String message,T data){
+		return BaseResponseDto.<T>builder()
+			.code(201)
 			.message(message)
 			.data(data)
 			.build();
