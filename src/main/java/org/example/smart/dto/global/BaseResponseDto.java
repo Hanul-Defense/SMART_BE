@@ -23,9 +23,17 @@ public record BaseResponseDto<T>(
 			.build();
 	}
 
-	public static <T> BaseResponseDto<T>created(String message,T data){
+	public static <T> BaseResponseDto<T> created(String message, T data) {
 		return BaseResponseDto.<T>builder()
 			.code(201)
+			.message(message)
+			.data(data)
+			.build();
+	}
+
+	public static <T> BaseResponseDto<T> error(Integer code, String message, T data) {
+		return BaseResponseDto.<T>builder()
+			.code(code)
 			.message(message)
 			.data(data)
 			.build();
