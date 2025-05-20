@@ -6,6 +6,7 @@ import org.example.smart.dto.request.PostSignUpDto;
 import org.example.smart.dto.response.ResponseSignInDto;
 import org.example.smart.dto.response.ResponseSignUpDto;
 import org.example.smart.service.AuthService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,17 +21,17 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/sign-up")
-	public BaseResponseDto<ResponseSignUpDto> signUp(
+	public ResponseEntity<BaseResponseDto<?>> signUp(
 		@RequestBody PostSignUpDto postSignUpDto
 	) {
 		ResponseSignUpDto responseSignUpDto = authService.signUp(postSignUpDto);
-		return BaseResponseDto.created(responseSignUpDto.message(), null);
+		return ResponseEntity.ok(BaseResponseDto.of(responseSignUpDto.message(), null));
 	}
 
 	@PostMapping("/sign-in")
-	public BaseResponseDto<ResponseSignInDto> signIn(
+	public ResponseEntity<BaseResponseDto<ResponseSignInDto>> signIn(
 		@RequestBody PostSignInDto postSignInDto
 	){
-		return BaseResponseDto.ok("로그인에 성공했습니다.", authService.signIn(postSignInDto));
+		return ResponseEntity.ok(BaseResponseDto.of("로그인에 성공했습니다.", authService.signIn(postSignInDto)));
 	}
 }
