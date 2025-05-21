@@ -4,9 +4,6 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
-
-@Builder
 public record PostSignUpDto(
 	@JsonProperty(value = "soldier_name", required = true)
 	String soldierName,
