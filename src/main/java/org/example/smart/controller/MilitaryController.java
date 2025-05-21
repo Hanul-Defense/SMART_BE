@@ -1,5 +1,6 @@
 package org.example.smart.controller;
 
+import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.response.ResponseUnitNameListDto;
 import org.example.smart.service.MilitaryService;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,9 @@ public class MilitaryController {
 	private final MilitaryService militaryService;
 
 	@GetMapping()
-	public ResponseEntity<ResponseUnitNameListDto> getUnitNameList(
-		@RequestParam(required = true) String keyword
+	public ResponseEntity<BaseResponseDto<ResponseUnitNameListDto>> getUnitNameList(
+		@RequestParam String keyword
 	) {
-		return ResponseEntity.ok().body(militaryService.getUnitNameList(keyword));
+		return ResponseEntity.ok(BaseResponseDto.of("요청에 성공했습니다.", militaryService.getUnitNameList(keyword)));
 	}
 }
