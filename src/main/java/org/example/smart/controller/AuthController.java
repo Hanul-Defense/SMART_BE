@@ -5,7 +5,9 @@ import org.example.smart.dto.request.PostSignInDto;
 import org.example.smart.dto.request.PostSignUpDto;
 import org.example.smart.dto.response.ResponseSignInDto;
 import org.example.smart.dto.response.ResponseSignUpDto;
+import org.example.smart.exception.ErrorCode;
 import org.example.smart.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,10 @@ public class AuthController {
 		@RequestBody PostSignUpDto postSignUpDto
 	) {
 		ResponseSignUpDto responseSignUpDto = authService.signUp(postSignUpDto);
+		if (responseSignUpDto.code() == 500) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(BaseResponseDto.error(ErrorCode.INTERNAL_SERVER_ERROR));
+		}
 		return ResponseEntity.ok(BaseResponseDto.of(responseSignUpDto.message(), null));
 	}
 
