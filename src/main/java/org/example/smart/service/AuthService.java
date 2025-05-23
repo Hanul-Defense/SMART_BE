@@ -61,7 +61,8 @@ public class AuthService implements UserDetailsService {
 		boolean isValidatePassword = passwordEncoder.matches(postSignInDto.password(), soldier.getPassword());
 
 		if(isValidatePassword){
-			return new ResponseSignInDto(soldier.getId());
+			return new ResponseSignInDto(soldier.getId(), jwtUtil.generateAccessToken(soldier.getServiceNumber(),
+				soldier.getId()), jwtUtil.generateRefreshToken(soldier.getServiceNumber(), soldier.getId()));
 		}
 		throw new RuntimeException();
 	}
