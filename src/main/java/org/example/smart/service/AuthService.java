@@ -43,6 +43,7 @@ public class AuthService implements UserDetailsService {
 			Soldier soldier = Soldier.builder()
 				.military(military)
 				.name(postSignUpDto.soldierName())
+				.age(postSignUpDto.age())
 				.serviceNumber(postSignUpDto.serviceNumber())
 				.password(passwordEncoder.encode(postSignUpDto.password()))
 				.enlistmentDate(postSignUpDto.enlistmentDate())
@@ -51,16 +52,16 @@ public class AuthService implements UserDetailsService {
 
 			soldierRepository.save(soldier);
 		} catch (Exception e) {
-			return new ResponseSignUpDto(500,"회원가입에 실패했습니다.");
+			return new ResponseSignUpDto(500, "회원가입에 실패했습니다.");
 		}
-		return new ResponseSignUpDto(201,"회원가입에 성공했습니다.");
+		return new ResponseSignUpDto(201, "회원가입에 성공했습니다.");
 	}
 
-	public ResponseSignInDto signIn(PostSignInDto postSignInDto){
+	public ResponseSignInDto signIn(PostSignInDto postSignInDto) {
 		Soldier soldier = soldierRepository.findByServiceNumber(postSignInDto.serviceNumber()).orElseThrow();
 		boolean isValidatePassword = passwordEncoder.matches(postSignInDto.password(), soldier.getPassword());
 
-		if(isValidatePassword){
+		if (isValidatePassword) {
 			return new ResponseSignInDto(soldier.getId(), jwtUtil.generateAccessToken(soldier.getServiceNumber(),
 				soldier.getId()), jwtUtil.generateRefreshToken(soldier.getServiceNumber(), soldier.getId()));
 		}
