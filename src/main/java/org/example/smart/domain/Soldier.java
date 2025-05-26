@@ -35,8 +35,8 @@ public class Soldier {
 	@Column(name = "soldier_name", nullable = false, length = 10)
 	private String name;
 
-	@Column(name = "age", nullable = false)
-	private Integer age;
+	@Column(name = "birth", nullable = false)
+	private LocalDate birth;
 
 	@Column(name = "service_number", nullable = false, length = 11)
 	private String serviceNumber;
@@ -51,11 +51,11 @@ public class Soldier {
 	private LocalDate enlistmentDate;
 
 	@Builder
-	public Soldier(Military military, String name, Integer age, String serviceNumber, String password,
+	public Soldier(Military military, String name, LocalDate birth, String serviceNumber, String password,
 		MilitaryRank militaryRank, LocalDate enlistmentDate) {
 		this.military = military;
 		this.name = name;
-		this.age = age;
+		this.birth = birth;
 		this.serviceNumber = serviceNumber;
 		this.password = password;
 		this.militaryRank = militaryRank;

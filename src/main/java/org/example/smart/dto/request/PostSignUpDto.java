@@ -8,8 +8,8 @@ public record PostSignUpDto(
 	@JsonProperty(value = "soldier_name", required = true)
 	String soldierName,
 
-	@JsonProperty(value = "age", required = true)
-	Integer age,
+	@JsonProperty(value = "birth", required = true)
+	LocalDate birth,
 
 	@JsonProperty(value = "service_number", required = true)
 	String serviceNumber,

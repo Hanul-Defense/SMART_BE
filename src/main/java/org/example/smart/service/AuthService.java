@@ -43,7 +43,7 @@ public class AuthService implements UserDetailsService {
 			Soldier soldier = Soldier.builder()
 				.military(military)
 				.name(postSignUpDto.soldierName())
-				.age(postSignUpDto.age())
+				.birth(postSignUpDto.birth())
 				.serviceNumber(postSignUpDto.serviceNumber())
 				.password(passwordEncoder.encode(postSignUpDto.password()))
 				.enlistmentDate(postSignUpDto.enlistmentDate())
