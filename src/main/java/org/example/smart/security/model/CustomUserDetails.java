@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-	private final Long userId;
+	private final Long soldierId;
 	private final String serviceNumber;
 	private final String password;
 	private final String name;
