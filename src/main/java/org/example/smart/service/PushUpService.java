@@ -35,7 +35,7 @@ public class PushUpService implements EstimationService {
 				.count(postEstimationDto.count())
 				.standard(standard)
 				.evaluationType(postEstimationDto.evaluationType())
-				.evaluationDate(postEstimationDto.estimationDate())
+				.evaluationDate(postEstimationDto.evaluationDate())
 				.summary(null)
 				.contentUrl(null)
 				.build();

@@ -13,7 +13,7 @@ public record PostEstimationDto(
 	@JsonProperty(value = "evaluation_type")
 	EvaluationType evaluationType,
 
-	@JsonProperty(value = "estimation_date")
-	LocalDateTime estimationDate
+	@JsonProperty(value = "evaluation_date")
+	LocalDateTime evaluationDate
 ) {
 }
