@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtUtil {
 	private final SecretKey secretKey;
@@ -30,10 +32,11 @@ public class JwtUtil {
 
 	public boolean validateToken(String token, UserDetails userDetails) {
 		String serviceNumber = getServiceNumber(token);
-		return serviceNumber.equals(userDetails.getUsername()) && isTokenExpired(token);
+		log.info("getServiceNumber success " + serviceNumber);
+		return serviceNumber.equals(userDetails.getUsername()) && !isTokenExpired(token);
 	}
 
-	public boolean isTokenExpired(String token){
+	public boolean isTokenExpired(String token) {
 		return Jwts.parser()
 			.verifyWith(secretKey)
 			.build()
@@ -52,7 +55,7 @@ public class JwtUtil {
 			.get("serviceNumber", String.class);
 	}
 
-	public Long getUserId(String token){
+	public Long getUserId(String token) {
 		String userId = Jwts.parser()
 			.verifyWith(secretKey)
 			.build()

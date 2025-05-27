@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Service(value = "pushUpService")
 @RequiredArgsConstructor
 public class PushUpService implements EstimationService {
 	private final SoldierRepository soldierRepository;
@@ -41,7 +41,7 @@ public class PushUpService implements EstimationService {
 				.build();
 
 			pushUpRepository.save(pushUp);
-			return "요청에 성공했습니다.";
+			return "등록을 성공했습니다.";
 		} catch (Exception e) {
 			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
