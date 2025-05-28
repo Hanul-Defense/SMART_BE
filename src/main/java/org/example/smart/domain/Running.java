@@ -40,9 +40,6 @@ public class Running {
 	@JoinColumn(name = "standard_id", nullable = false)
 	private Standard standard;
 
-	@Column(name = "distance", nullable = false, precision = 5, scale = 2)
-	private BigDecimal distance;
-
 	@Column(name = "time", nullable = false)
 	private Integer time;
 

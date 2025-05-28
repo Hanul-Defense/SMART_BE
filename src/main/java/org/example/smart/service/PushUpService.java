@@ -31,7 +31,7 @@ public class PushUpService implements EstimationService {
 
 	@Override
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
-		log.info("postEstimation in" + soldierId);
+		log.info("postEstimation Service in");
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
 			"Soldier not found for soldierId=" + soldierId
 		));
@@ -47,7 +47,6 @@ public class PushUpService implements EstimationService {
 				.evaluationType(postEstimationDto.evaluationType())
 				.evaluationDate(postEstimationDto.evaluationDate())
 				.summary(postEstimationDto.summary()) // TODO
-				.contentUrl(null)
 				.build();
 
 			pushUpRepository.save(pushUp);
