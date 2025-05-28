@@ -10,6 +10,9 @@ public record PostEstimationDto(
 	@JsonProperty(value = "count")
 	Integer count,
 
+	@JsonProperty(value = "summary")
+	String summary,
+
 	@JsonProperty(value = "evaluation_type")
 	EvaluationType evaluationType,
 
