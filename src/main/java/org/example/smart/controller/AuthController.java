@@ -27,9 +27,9 @@ public class AuthController {
 		@RequestBody PostSignUpDto postSignUpDto
 	) {
 		ResponseSignUpDto responseSignUpDto = authService.signUp(postSignUpDto);
-		if (responseSignUpDto.code() == 500) {
+		if (responseSignUpDto.code().equals(ErrorCode.INTERNAL_SERVER_ERROR.getCode())) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(BaseResponseDto.error(ErrorCode.INTERNAL_SERVER_ERROR));
+				.body(BaseResponseDto.error(ErrorCode.INTERNAL_SERVER_ERROR, responseSignUpDto.message()));
 		}
 		return ResponseEntity.ok(BaseResponseDto.of(responseSignUpDto.message(), null));
 	}
@@ -37,7 +37,7 @@ public class AuthController {
 	@PostMapping("/sign-in")
 	public ResponseEntity<BaseResponseDto<ResponseSignInDto>> signIn(
 		@RequestBody PostSignInDto postSignInDto
-	){
+	) {
 		return ResponseEntity.ok(BaseResponseDto.of("로그인에 성공했습니다.", authService.signIn(postSignInDto)));
 	}
 }

@@ -32,4 +32,12 @@ public record BaseResponseDto<T>(
 			.data(null)
 			.build();
 	}
+
+	public static <T> BaseResponseDto<T> error(ErrorCode errorCode, String message) {
+		return BaseResponseDto.<T>builder()
+			.code(errorCode.getCode())
+			.message(message)
+			.data(null)
+			.build();
+	}
 }

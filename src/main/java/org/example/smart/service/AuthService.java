@@ -26,7 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
@@ -41,14 +43,15 @@ public class AuthService implements UserDetailsService {
 			throw new GlobalException(ErrorCode.DUPLICATE_SERVICENUMBER);
 		}
 
-		try {
-			Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
-					MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryBranch()),
-					postSignUpDto.militaryName(),
-					postSignUpDto.company(),
-					postSignUpDto.platoon())
-				.orElseThrow();
+		Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
+				MilitaryBranch.getMilitaryBranchByName(postSignUpDto.militaryBranch()),
+				postSignUpDto.militaryName(),
+				postSignUpDto.company(),
+				postSignUpDto.platoon())
+			.orElseThrow(
+				() -> new GlobalException(ErrorCode.BAD_MILITARY_NAME));
 
+		try {
 			Soldier soldier = Soldier.builder()
 				.military(military)
 				.name(postSignUpDto.soldierName())
@@ -61,7 +64,8 @@ public class AuthService implements UserDetailsService {
 
 			soldierRepository.save(soldier);
 		} catch (Exception e) {
-			return new ResponseSignUpDto(500, "회원가입에 실패했습니다.");
+			log.error(e.getMessage());
+			return new ResponseSignUpDto(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), "회원가입에 실패했습니다.");
 		}
 		return new ResponseSignUpDto(201, "회원가입에 성공했습니다.");
 	}
