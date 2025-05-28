@@ -13,6 +13,7 @@ public enum StandardRank {
 	SECOND("2급"),
 
 	THIRD("3급"),
+	FAIL("불합격")
 	;
 
 	private final String rankName;

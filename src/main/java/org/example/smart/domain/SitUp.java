@@ -42,9 +42,6 @@ public class SitUp {
 	@Column(name = "count", nullable = false)
 	private Integer count;
 
-	@Column(name = "content_url", nullable = true)
-	private String contentUrl;
-
 	@Column(name = "summary", nullable = true, length = 500)
 	private String summary;
 
@@ -56,12 +53,11 @@ public class SitUp {
 	private LocalDateTime evaluationDate;
 
 	@Builder
-	public SitUp(Soldier soldier, Standard standard, Integer count, String contentUrl, String summary,
+	public SitUp(Soldier soldier, Standard standard, Integer count, String summary,
 		EvaluationType evaluationType, LocalDateTime evaluationDate) {
 		this.soldier = soldier;
 		this.standard = standard;
 		this.count = count;
-		this.contentUrl = contentUrl;
 		this.summary = summary;
 		this.evaluationType = evaluationType;
 		this.evaluationDate = evaluationDate;

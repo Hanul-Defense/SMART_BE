@@ -1,9 +1,13 @@
 package org.example.smart.service;
 
+import java.util.List;
+
 import org.example.smart.domain.PushUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
+import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
 import org.example.smart.repository.PushUpRepository;
@@ -11,11 +15,15 @@ import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
 import org.example.smart.service.spec.EstimationService;
 import org.example.smart.util.BirthUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service(value = "pushUpService")
+@Qualifier("pushUpService")
 @RequiredArgsConstructor
 public class PushUpService implements EstimationService {
 	private final SoldierRepository soldierRepository;
@@ -24,11 +32,15 @@ public class PushUpService implements EstimationService {
 
 	@Override
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
-		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
+		log.info("postEstimation Service in");
+		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
+			"Soldier not found for soldierId=" + soldierId
+		));
 		Integer age = BirthUtil.getAgeByBirth(soldier.getBirth());
-		Standard standard = standardRepository.findByAgeAndCount(age, postEstimationDto.count())
-			.orElseThrow();
-
+		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
+				EvaluationCategory.PUSH_UP)
+			.orElseThrow(() -> new RuntimeException(
+				"Standard not found for age=" + age + ", count=" + postEstimationDto.count()));
 		try {
 			PushUp pushUp = PushUp.builder()
 				.soldier(soldier)
@@ -37,13 +49,26 @@ public class PushUpService implements EstimationService {
 				.evaluationType(postEstimationDto.evaluationType())
 				.evaluationDate(postEstimationDto.evaluationDate())
 				.summary(postEstimationDto.summary()) // TODO
-				.contentUrl(null)
 				.build();
 
 			pushUpRepository.save(pushUp);
 			return "등록을 성공했습니다.";
 		} catch (Exception e) {
-			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR);
+			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
+	}
+
+	@Override
+	public List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId) {
+		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
+		List<PushUp> pushUpList = pushUpRepository.getPushUpsBySoldier(soldier);
+		return pushUpList.stream()
+			.map(pushUp -> ResponseEstimationRecordDto.builder()
+				.count(pushUp.getCount())
+				.summary(pushUp.getSummary())
+				.evaluationType(pushUp.getEvaluationType())
+				.evaluationDate(pushUp.getEvaluationDate())
+				.build()
+			).toList();
 	}
 }

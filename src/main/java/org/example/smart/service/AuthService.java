@@ -1,6 +1,9 @@
 package org.example.smart.service;
 
 import java.util.Collections;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.example.smart.domain.Military;
 import org.example.smart.domain.Soldier;
@@ -10,6 +13,8 @@ import org.example.smart.dto.request.PostSignInDto;
 import org.example.smart.dto.request.PostSignUpDto;
 import org.example.smart.dto.response.ResponseSignInDto;
 import org.example.smart.dto.response.ResponseSignUpDto;
+import org.example.smart.exception.ErrorCode;
+import org.example.smart.exception.GlobalException;
 import org.example.smart.repository.MilitaryRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.security.model.CustomUserDetails;
@@ -31,6 +36,10 @@ public class AuthService implements UserDetailsService {
 	private final JwtUtil jwtUtil;
 
 	public ResponseSignUpDto signUp(PostSignUpDto postSignUpDto) {
+
+		if (isDuplicateServiceNumber(postSignUpDto.serviceNumber())) {
+			throw new GlobalException(ErrorCode.DUPLICATE_SERVICENUMBER);
+		}
 
 		try {
 			Military military = militaryRepository.findByMilitaryBranchAndMilitaryNameAndCompanyAndPlatoon(
@@ -74,5 +83,10 @@ public class AuthService implements UserDetailsService {
 
 		return new CustomUserDetails(soldier.getId(), soldier.getServiceNumber(), soldier.getPassword(),
 			soldier.getName(), Collections.emptyList());
+	}
+
+	private boolean isDuplicateServiceNumber(String serviceNumber) {
+		Optional<Soldier> soldier = soldierRepository.findByServiceNumber(serviceNumber);
+		return soldier.isPresent();
 	}
 }

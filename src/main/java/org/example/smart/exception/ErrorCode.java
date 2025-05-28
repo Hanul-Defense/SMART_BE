@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum ErrorCode {
 	//400
 	BAD_REQUEST(40000, HttpStatus.BAD_REQUEST, "잘못된 요청 형식입니다."),
+	DUPLICATE_SERVICENUMBER(40001, HttpStatus.BAD_REQUEST, "이미 존재하는 군번입니다."),
 
 	//401
 	UNAUTHORIZED(40100, HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
