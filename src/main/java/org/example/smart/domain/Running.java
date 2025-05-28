@@ -1,6 +1,5 @@
 package org.example.smart.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.example.smart.domain.enums.EvaluationType;
