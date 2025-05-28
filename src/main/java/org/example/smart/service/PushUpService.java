@@ -5,6 +5,7 @@ import java.util.List;
 import org.example.smart.domain.PushUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
+import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.exception.ErrorCode;
@@ -36,7 +37,8 @@ public class PushUpService implements EstimationService {
 			"Soldier not found for soldierId=" + soldierId
 		));
 		Integer age = BirthUtil.getAgeByBirth(soldier.getBirth());
-		Standard standard = standardRepository.findByAgeAndCount(age, postEstimationDto.count())
+		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
+				EvaluationCategory.PUSH_UP)
 			.orElseThrow(() -> new RuntimeException(
 				"Standard not found for age=" + age + ", count=" + postEstimationDto.count()));
 		try {
