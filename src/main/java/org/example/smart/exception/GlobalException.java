@@ -5,9 +5,18 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
 	private final ErrorCode errorCode;
-	public String getMessage(){
-		return this.errorCode.getMessage();
+	private final String message;
+
+	public GlobalException(ErrorCode errorCode) {
+		this.errorCode = errorCode;
+		this.message = errorCode.getMessage();
+	}
+
+	public String getMessage() {
+		if (message.isEmpty())
+			return this.errorCode.getMessage();
+		return this.message;
 	}
 }
