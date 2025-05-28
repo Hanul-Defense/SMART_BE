@@ -20,6 +20,6 @@ public interface MilitaryRepository extends JpaRepository<Military, Long> {
 		Integer platoon
 	);
 
-	@Query("select m from Military m where m.militaryName like %:keyword%")
-	List<Military> findMilitariesByKeyword(@Param("keyword") String keyword);
+	@Query("select distinct m.militaryName from Military m where m.militaryName like %:keyword%")
+	List<String> findMilitaryNameByKeyword(@Param("keyword") String keyword);
 }
