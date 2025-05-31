@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum EvaluationCategory {
-	PUSH_UP("푸시업"), SIT_UP("윗몸일으키기"), RUNNING("3km 뜀걸음"),
+	PUSH_UP("푸시업"), SIT_UP("싯업"), RUNNING("3km"),
 	;
 
 	private final String categoryName;
@@ -19,10 +19,10 @@ public enum EvaluationCategory {
 			case "푸시업" -> {
 				return EvaluationCategory.PUSH_UP;
 			}
-			case "윗몸일으키기"->{
+			case "싯업"->{
 				return EvaluationCategory.SIT_UP;
 			}
-			case "3km 뜀걸음"->{
+			case "3km"->{
 				return EvaluationCategory.RUNNING;
 			}
 		}
