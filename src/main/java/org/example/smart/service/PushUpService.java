@@ -1,6 +1,9 @@
 package org.example.smart.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.example.smart.domain.PushUp;
 import org.example.smart.domain.Soldier;
@@ -70,5 +73,16 @@ public class PushUpService implements EstimationService {
 				.evaluationDate(pushUp.getEvaluationDate())
 				.build()
 			).toList();
+	}
+
+	@Override
+	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
+		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
+		return ResponseEstimationRecordDto.builder()
+			.count(pushUp.getCount())
+			.summary(pushUp.getSummary())
+			.evaluationType(pushUp.getEvaluationType())
+			.evaluationDate(pushUp.getEvaluationDate())
+			.build();
 	}
 }

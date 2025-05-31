@@ -9,4 +9,6 @@ public interface EstimationService {
 	String postEstimation(Long soldierId, PostEstimationDto postEstimationDto);
 
 	List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId);
+
+	ResponseEstimationRecordDto getEstimationRecord(Long estimationId);
 }
