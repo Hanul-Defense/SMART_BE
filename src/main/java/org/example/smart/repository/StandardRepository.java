@@ -1,5 +1,6 @@
 package org.example.smart.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.example.smart.domain.Standard;
@@ -20,4 +21,8 @@ public interface StandardRepository extends JpaRepository<Standard, Long> {
 		""")
 	Optional<Standard> findByAgeAndCountAndEvaluationCategory(@Param("age") Integer age, @Param("count") Integer count,
 		EvaluationCategory evaluationCategory);
+
+	@Query("select s from Standard s where s.minAge<=:age and s.maxAge>=:age order by s.maxValue desc")
+	List<Standard> findStandardsByEvaluationCategoryAndAge(
+		@Param("evauationCategory") EvaluationCategory evaluationCategory, @Param("age") Integer age);
 }

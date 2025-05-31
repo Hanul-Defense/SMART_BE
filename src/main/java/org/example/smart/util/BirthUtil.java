@@ -2,8 +2,6 @@ package org.example.smart.util;
 
 import java.time.LocalDate;
 
-import lombok.experimental.UtilityClass;
-
 public class BirthUtil {
 	public static Integer getAgeByBirth(LocalDate birth) {
 		LocalDate now = LocalDate.now();
