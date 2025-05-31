@@ -2,7 +2,7 @@ package org.example.smart.service;
 
 import java.util.List;
 
-import org.example.smart.domain.PushUp;
+import org.example.smart.domain.SitUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
@@ -10,7 +10,7 @@ import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
-import org.example.smart.repository.PushUpRepository;
+import org.example.smart.repository.SitUpRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
 import org.example.smart.service.spec.EstimationService;
@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service(value = "pushUpService")
-@Qualifier("pushUpService")
+@Service
+@Qualifier("sitUpService")
 @RequiredArgsConstructor
-public class PushUpService implements EstimationService {
+public class SitUpService implements EstimationService {
 	private final SoldierRepository soldierRepository;
-	private final PushUpRepository pushUpRepository;
+	private final SitUpRepository sitUpRepository;
 	private final StandardRepository standardRepository;
 
 	@Override
@@ -42,7 +42,7 @@ public class PushUpService implements EstimationService {
 			.orElseThrow(() -> new RuntimeException(
 				"Standard not found for age=" + age + ", count=" + postEstimationDto.count()));
 		try {
-			PushUp pushUp = PushUp.builder()
+			SitUp sitUp = SitUp.builder()
 				.soldier(soldier)
 				.count(postEstimationDto.count())
 				.standard(standard)
@@ -51,7 +51,7 @@ public class PushUpService implements EstimationService {
 				.summary(postEstimationDto.summary()) // TODO
 				.build();
 
-			pushUpRepository.save(pushUp);
+			sitUpRepository.save(sitUp);
 			return "등록을 성공했습니다.";
 		} catch (Exception e) {
 			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -61,25 +61,25 @@ public class PushUpService implements EstimationService {
 	@Override
 	public List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
-		List<PushUp> pushUpList = pushUpRepository.getPushUpsBySoldier(soldier);
-		return pushUpList.stream()
-			.map(pushUp -> ResponseEstimationRecordDto.builder()
-				.count(pushUp.getCount())
-				.summary(pushUp.getSummary())
-				.evaluationType(pushUp.getEvaluationType())
-				.evaluationDate(pushUp.getEvaluationDate())
+		List<SitUp> sitUpList = sitUpRepository.getSitUpsBySoldier(soldier);
+		return sitUpList.stream()
+			.map(sitUp -> ResponseEstimationRecordDto.builder()
+				.count(sitUp.getCount())
+				.summary(sitUp.getSummary())
+				.evaluationType(sitUp.getEvaluationType())
+				.evaluationDate(sitUp.getEvaluationDate())
 				.build()
 			).toList();
 	}
 
 	@Override
 	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
-		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
+		SitUp sitUp = sitUpRepository.findById(estimationId).orElseThrow();
 		return ResponseEstimationRecordDto.builder()
-			.count(pushUp.getCount())
-			.summary(pushUp.getSummary())
-			.evaluationType(pushUp.getEvaluationType())
-			.evaluationDate(pushUp.getEvaluationDate())
+			.count(sitUp.getCount())
+			.summary(sitUp.getSummary())
+			.evaluationType(sitUp.getEvaluationType())
+			.evaluationDate(sitUp.getEvaluationDate())
 			.build();
 	}
 }

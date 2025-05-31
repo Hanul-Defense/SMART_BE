@@ -5,7 +5,7 @@ import java.util.List;
 import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
-import org.example.smart.service.PushUpService;
+import org.example.smart.service.SitUpService;
 import org.example.smart.util.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,12 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequestMapping("/api/v1/situps")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/pushups")
-public class PushUpController {
+public class SitUpController {
 
-	@Qualifier("pushUpService")
-	private final PushUpService pushUpService;
+	@Qualifier("sitUpService")
+	private final SitUpService sitUpService;
 
 	@GetMapping
 	public ResponseEntity<BaseResponseDto<List<ResponseEstimationRecordDto>>> getPushUpList(
@@ -36,7 +36,7 @@ public class PushUpController {
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(BaseResponseDto.ok(
-				pushUpService.getEstimationRecordList(AuthenticationUtil.getSoldierId(authentication))));
+				sitUpService.getEstimationRecordList(AuthenticationUtil.getSoldierId(authentication))));
 	}
 
 	@PostMapping()
@@ -47,7 +47,7 @@ public class PushUpController {
 		log.info("post pushup contorller");
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(BaseResponseDto.created(
-				pushUpService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
+				sitUpService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
 	}
 
 	@GetMapping("/{id}")
@@ -55,6 +55,6 @@ public class PushUpController {
 		@PathVariable("id") Long pushUpId
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(BaseResponseDto.ok(pushUpService.getEstimationRecord(pushUpId)));
+			.body(BaseResponseDto.ok(sitUpService.getEstimationRecord(pushUpId)));
 	}
 }
