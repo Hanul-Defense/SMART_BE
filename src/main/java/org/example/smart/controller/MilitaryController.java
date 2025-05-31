@@ -21,6 +21,6 @@ public class MilitaryController {
 	public ResponseEntity<BaseResponseDto<ResponseUnitNameListDto>> getUnitNameList(
 		@RequestParam String keyword
 	) {
-		return ResponseEntity.ok(BaseResponseDto.of("요청에 성공했습니다.", militaryService.getMilitaryNameList(keyword)));
+		return ResponseEntity.ok(BaseResponseDto.ok(militaryService.getMilitaryNameList(keyword)));
 	}
 }

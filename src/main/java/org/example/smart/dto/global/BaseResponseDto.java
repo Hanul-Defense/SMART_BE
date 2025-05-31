@@ -17,11 +17,27 @@ public record BaseResponseDto<T>(
 	@JsonProperty(value = "data")
 	T data
 ) {
-	public static <T> BaseResponseDto<T> of(String message, T data) {
+	public static <T> BaseResponseDto<T> ok(String message, T data) {
 		return BaseResponseDto.<T>builder()
 			.code(200)
 			.message(message)
 			.data(data)
+			.build();
+	}
+
+	public static <T> BaseResponseDto<T> ok(T data) {
+		return BaseResponseDto.<T>builder()
+			.code(200)
+			.message("요청을 성공했습니다.")
+			.data(data)
+			.build();
+	}
+
+	public static <T> BaseResponseDto<T> created(String message) {
+		return BaseResponseDto.<T>builder()
+			.code(201)
+			.message(message)
+			.data(null)
 			.build();
 	}
 

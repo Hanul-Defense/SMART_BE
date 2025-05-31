@@ -31,13 +31,14 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(BaseResponseDto.error(ErrorCode.INTERNAL_SERVER_ERROR, responseSignUpDto.message()));
 		}
-		return ResponseEntity.ok(BaseResponseDto.of(responseSignUpDto.message(), null));
+		return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseDto.created(responseSignUpDto.message()));
 	}
 
 	@PostMapping("/sign-in")
 	public ResponseEntity<BaseResponseDto<ResponseSignInDto>> signIn(
 		@RequestBody PostSignInDto postSignInDto
 	) {
-		return ResponseEntity.ok(BaseResponseDto.of("로그인에 성공했습니다.", authService.signIn(postSignInDto)));
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(BaseResponseDto.ok("로그인에 성공했습니다.", authService.signIn(postSignInDto)));
 	}
 }

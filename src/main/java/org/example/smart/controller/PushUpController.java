@@ -37,7 +37,7 @@ public class PushUpController {
 		Authentication authentication
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(new BaseResponseDto<>(HttpStatus.OK.value(), "",
+			.body(BaseResponseDto.ok(
 				pushUpService.getEstimationRecordList(AuthenticationUtil.getSoldierId(authentication))));
 	}
 
@@ -48,9 +48,8 @@ public class PushUpController {
 	) {
 		log.info("post pushup contorller");
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(new BaseResponseDto<>(HttpStatus.CREATED.value(),
-				estimationService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto),
-				null));
+			.body(BaseResponseDto.created(
+				estimationService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
 	}
 
 	@GetMapping("/{id}")
@@ -58,7 +57,6 @@ public class PushUpController {
 		@PathVariable("id") Long pushUpId
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(new BaseResponseDto<>(HttpStatus.OK.value(), "",
-				estimationService.getEstimationRecord(pushUpId)));
+			.body(BaseResponseDto.ok(estimationService.getEstimationRecord(pushUpId)));
 	}
 }
