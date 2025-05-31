@@ -62,24 +62,20 @@ public class PushUpService implements EstimationService {
 	public List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<PushUp> pushUpList = pushUpRepository.getPushUpsBySoldier(soldier);
+
 		return pushUpList.stream()
-			.map(pushUp -> ResponseEstimationRecordDto.builder()
-				.count(pushUp.getCount())
-				.summary(pushUp.getSummary())
-				.evaluationType(pushUp.getEvaluationType())
-				.evaluationDate(pushUp.getEvaluationDate())
-				.build()
+			.map(
+				pushUp -> ResponseEstimationRecordDto.of(pushUp.getStandard().getEvaluationCategory().getCategoryName(),
+					pushUp.getCount(), pushUp.getStandard().getStandardRank().getRankName(), pushUp.getSummary(),
+					pushUp.getEvaluationType(), pushUp.getEvaluationDate())
 			).toList();
 	}
 
 	@Override
 	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
 		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
-		return ResponseEstimationRecordDto.builder()
-			.count(pushUp.getCount())
-			.summary(pushUp.getSummary())
-			.evaluationType(pushUp.getEvaluationType())
-			.evaluationDate(pushUp.getEvaluationDate())
-			.build();
+		return ResponseEstimationRecordDto.of(pushUp.getStandard().getEvaluationCategory().getCategoryName(),
+			pushUp.getCount(), pushUp.getStandard().getStandardRank().getRankName(), pushUp.getSummary(),
+			pushUp.getEvaluationType(), pushUp.getEvaluationDate());
 	}
 }

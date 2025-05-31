@@ -11,8 +11,14 @@ import lombok.Builder;
 @Builder
 public record ResponseEstimationRecordDto(
 
+	@JsonProperty(value = "category_name")
+	String categoryName,
+
 	@JsonProperty(value = "count")
 	Integer count,
+
+	@JsonProperty(value = "rank")
+	String rank,
 
 	@JsonProperty(value = "summary")
 	String summary,
@@ -23,10 +29,12 @@ public record ResponseEstimationRecordDto(
 	@JsonProperty(value = "evaluation_date")
 	LocalDateTime evaluationDate
 ) {
-	public static ResponseEstimationRecordDto of(Integer count, String summary, EvaluationType evaluationType,
-		LocalDateTime evaluationDate) {
+	public static ResponseEstimationRecordDto of(String categoryName, Integer count, String rank, String summary,
+		EvaluationType evaluationType, LocalDateTime evaluationDate) {
 		return ResponseEstimationRecordDto.builder()
+			.categoryName(categoryName)
 			.count(count)
+			.rank(rank)
 			.summary(summary)
 			.evaluationType(evaluationType)
 			.evaluationDate(evaluationDate)

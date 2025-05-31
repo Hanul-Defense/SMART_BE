@@ -63,23 +63,18 @@ public class SitUpService implements EstimationService {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<SitUp> sitUpList = sitUpRepository.getSitUpsBySoldier(soldier);
 		return sitUpList.stream()
-			.map(sitUp -> ResponseEstimationRecordDto.builder()
-				.count(sitUp.getCount())
-				.summary(sitUp.getSummary())
-				.evaluationType(sitUp.getEvaluationType())
-				.evaluationDate(sitUp.getEvaluationDate())
-				.build()
+			.map(sitUp ->
+				ResponseEstimationRecordDto.of(sitUp.getStandard().getEvaluationCategory().getCategoryName(),
+					sitUp.getCount(), sitUp.getStandard().getStandardRank().getRankName(), sitUp.getSummary(),
+					sitUp.getEvaluationType(), sitUp.getEvaluationDate())
 			).toList();
 	}
 
 	@Override
 	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
 		SitUp sitUp = sitUpRepository.findById(estimationId).orElseThrow();
-		return ResponseEstimationRecordDto.builder()
-			.count(sitUp.getCount())
-			.summary(sitUp.getSummary())
-			.evaluationType(sitUp.getEvaluationType())
-			.evaluationDate(sitUp.getEvaluationDate())
-			.build();
+		return ResponseEstimationRecordDto.of(sitUp.getStandard().getEvaluationCategory().getCategoryName(),
+			sitUp.getCount(), sitUp.getStandard().getStandardRank().getRankName(), sitUp.getSummary(),
+			sitUp.getEvaluationType(), sitUp.getEvaluationDate());
 	}
 }
