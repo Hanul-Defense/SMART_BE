@@ -45,6 +45,9 @@ public class SitUp {
 	@Column(name = "summary", nullable = true, length = 500)
 	private String summary;
 
+	@OneToOne(mappedBy = "sitUp")
+	private SitUpFeedback sitUpFeedback;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "evaluation_type", nullable = false)
 	private EvaluationType evaluationType;
