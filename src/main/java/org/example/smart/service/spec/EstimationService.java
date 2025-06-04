@@ -3,6 +3,7 @@ package org.example.smart.service.spec;
 import java.util.List;
 
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 
 public interface EstimationService {
@@ -12,5 +13,5 @@ public interface EstimationService {
 
 	ResponseEstimationRecordDto getEstimationRecord(Long estimationId);
 
-	String postFeedback(Long soldierId, PostEstimationDto postEstimationDto);
+	String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto);
 }

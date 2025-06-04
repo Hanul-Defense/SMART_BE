@@ -25,7 +25,7 @@ public class SitUpFeedback {
 	@Column(name = "situp_feedback_id")
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name = "situp_id", nullable = false)
 	private SitUp sitUp;
 

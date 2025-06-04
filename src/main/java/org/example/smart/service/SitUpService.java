@@ -3,13 +3,16 @@ package org.example.smart.service;
 import java.util.List;
 
 import org.example.smart.domain.SitUp;
+import org.example.smart.domain.SitUpFeedback;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
+import org.example.smart.repository.SitUpFeedbackRepository;
 import org.example.smart.repository.SitUpRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SitUpService implements EstimationService {
 	private final SoldierRepository soldierRepository;
 	private final SitUpRepository sitUpRepository;
+	private final SitUpFeedbackRepository sitUpFeedbackRepository;
 	private final StandardRepository standardRepository;
 
 	@Override
@@ -76,5 +80,23 @@ public class SitUpService implements EstimationService {
 		return ResponseEstimationRecordDto.of(sitUp.getStandard().getEvaluationCategory().getCategoryName(),
 			sitUp.getCount(), sitUp.getStandard().getStandardRank().getRankName(), sitUp.getSummary(),
 			sitUp.getEvaluationType(), sitUp.getEvaluationDate());
+	}
+
+	@Override
+	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
+		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
+		SitUp sitUp = sitUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();
+		try {
+			SitUpFeedback feedback = SitUpFeedback.builder()
+				.sitUp(sitUp)
+				.soldier(soldier)
+				.feedbackContent(postFeedbackDto.feedback())
+				.build();
+
+			sitUpFeedbackRepository.save(feedback);
+			return "등록을 성공했습니다.";
+		} catch (Exception e) {
+			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, "저장이 되지 않았습니다.");
+		}
 	}
 }

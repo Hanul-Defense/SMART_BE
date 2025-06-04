@@ -3,13 +3,16 @@ package org.example.smart.service;
 import java.util.List;
 
 import org.example.smart.domain.PushUp;
+import org.example.smart.domain.PushUpFeedback;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
+import org.example.smart.repository.PushUpFeedbackRepository;
 import org.example.smart.repository.PushUpRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PushUpService implements EstimationService {
 	private final SoldierRepository soldierRepository;
 	private final PushUpRepository pushUpRepository;
+	private final PushUpFeedbackRepository pushUpFeedbackRepository;
 	private final StandardRepository standardRepository;
 
 	@Override
@@ -77,5 +81,23 @@ public class PushUpService implements EstimationService {
 		return ResponseEstimationRecordDto.of(pushUp.getStandard().getEvaluationCategory().getCategoryName(),
 			pushUp.getCount(), pushUp.getStandard().getStandardRank().getRankName(), pushUp.getSummary(),
 			pushUp.getEvaluationType(), pushUp.getEvaluationDate());
+	}
+
+	@Override
+	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
+		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
+		PushUp pushUp = pushUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();
+		try {
+			PushUpFeedback feedback = PushUpFeedback.builder()
+				.pushUp(pushUp)
+				.soldier(soldier)
+				.feedbackContent(postFeedbackDto.feedback())
+				.build();
+
+			pushUpFeedbackRepository.save(feedback);
+			return "등록을 성공했습니다.";
+		} catch (Exception e) {
+			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, "저장이 되지 않았습니다.");
+		}
 	}
 }

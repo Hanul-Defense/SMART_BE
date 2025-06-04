@@ -26,7 +26,7 @@ public class PushUpFeedback {
 	@Column(name = "pushup_feedback_id")
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name = "pushup_id", nullable = false)
 	private PushUp pushUp;
 
