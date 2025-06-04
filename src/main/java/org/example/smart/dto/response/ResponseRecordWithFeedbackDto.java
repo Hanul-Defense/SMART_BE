@@ -8,6 +8,7 @@ import org.example.smart.domain.SitUp;
 import org.example.smart.domain.SitUpFeedback;
 import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.domain.enums.EvaluationType;
+import org.example.smart.util.SoldierUtil;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,7 +49,7 @@ public record ResponseRecordWithFeedbackDto(
 			.count(pushUp.getCount())
 			.rank(pushUp.getStandard().getStandardRank().getRankName())
 			.summary(pushUp.getSummary())
-			.feedbackWriter(feedback != null ? feedback.getSoldier().getName() : null)
+			.feedbackWriter(feedback != null ? SoldierUtil.getNameWithRank(feedback.getSoldier()) : null)
 			.feedbackContent(feedback != null ? feedback.getFeedbackContent() : null)
 			.evaluationType(pushUp.getEvaluationType())
 			.evaluationDate(pushUp.getEvaluationDate())
@@ -63,7 +64,7 @@ public record ResponseRecordWithFeedbackDto(
 			.count(sitUp.getCount())
 			.rank(sitUp.getStandard().getStandardRank().getRankName())
 			.summary(sitUp.getSummary())
-			.feedbackWriter(feedback != null ? feedback.getSoldier().getName() : null)
+			.feedbackWriter(feedback != null ? SoldierUtil.getNameWithRank(feedback.getSoldier()) : null)
 			.feedbackContent(feedback != null ? feedback.getFeedbackContent() : null)
 			.evaluationType(sitUp.getEvaluationType())
 			.evaluationDate(sitUp.getEvaluationDate())

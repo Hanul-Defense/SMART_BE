@@ -8,7 +8,7 @@ import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.response.ResponseStandardDto;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
-import org.example.smart.util.BirthUtil;
+import org.example.smart.util.SoldierUtil;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class StandardService {
 
 	public List<ResponseStandardDto> getStandarList(Long soldierId, String categoryName) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
-		Integer age = BirthUtil.getAgeByBirth(soldier.getBirth());
+		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		EvaluationCategory evaluationCategory = EvaluationCategory.getEvaluationCategoryByCategoryName(categoryName);
 		List<Standard> standardList = standardRepository.findStandardsByEvaluationCategoryAndAge(evaluationCategory,
 			age);

@@ -17,7 +17,7 @@ import org.example.smart.repository.SitUpRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
 import org.example.smart.service.spec.EstimationService;
-import org.example.smart.util.BirthUtil;
+import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ public class SitUpService implements EstimationService {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
 			"Soldier not found for soldierId=" + soldierId
 		));
-		Integer age = BirthUtil.getAgeByBirth(soldier.getBirth());
+		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
 				EvaluationCategory.PUSH_UP)
 			.orElseThrow(() -> new RuntimeException(
