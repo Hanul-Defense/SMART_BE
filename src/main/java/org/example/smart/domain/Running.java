@@ -35,7 +35,7 @@ public class Running {
 	@JoinColumn(name = "soldier_id", nullable = false)
 	private Soldier soldier;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "standard_id", nullable = false)
 	private Standard standard;
 
