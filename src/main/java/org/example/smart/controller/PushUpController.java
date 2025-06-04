@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseEstimationRecordDto;
 import org.example.smart.service.PushUpService;
 import org.example.smart.util.AuthenticationUtil;
@@ -41,8 +42,8 @@ public class PushUpController {
 
 	@PostMapping()
 	public ResponseEntity<BaseResponseDto<?>> postPushUp(
-		Authentication authentication,
-		@RequestBody PostEstimationDto postEstimationDto
+		@RequestBody PostEstimationDto postEstimationDto,
+		Authentication authentication
 	) {
 		log.info("post pushup contorller");
 		return ResponseEntity.status(HttpStatus.CREATED)
@@ -56,5 +57,15 @@ public class PushUpController {
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(BaseResponseDto.ok(pushUpService.getEstimationRecord(pushUpId)));
+	}
+
+	@PostMapping("/feedback")
+	public ResponseEntity<BaseResponseDto<?>> postFeedback(
+		@RequestBody PostFeedbackDto postFeedbackDto,
+		Authentication authentication
+	) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(BaseResponseDto.ok(
+				pushUpService.postFeedback(AuthenticationUtil.getSoldierId(authentication), postFeedbackDto)));
 	}
 }
