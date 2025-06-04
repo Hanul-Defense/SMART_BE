@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.example.smart.domain.enums.EvaluationType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,6 +45,9 @@ public class PushUp {
 
 	@Column(name = "summary", nullable = true, length = 500)
 	private String summary;
+
+	@OneToOne(mappedBy = "pushUp", cascade = CascadeType.ALL, orphanRemoval = true)
+	private PushUpFeedback pushUpFeedback;
 
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "evaluation_type", nullable = false)

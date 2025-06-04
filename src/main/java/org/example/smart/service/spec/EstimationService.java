@@ -11,4 +11,6 @@ public interface EstimationService {
 	List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId);
 
 	ResponseEstimationRecordDto getEstimationRecord(Long estimationId);
+
+	String postFeedback(Long soldierId, PostEstimationDto postEstimationDto);
 }
