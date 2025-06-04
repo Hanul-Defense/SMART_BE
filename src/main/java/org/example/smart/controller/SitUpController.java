@@ -64,8 +64,8 @@ public class SitUpController {
 		@RequestBody PostFeedbackDto postFeedbackDto,
 		Authentication authentication
 	) {
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(BaseResponseDto.ok(
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(BaseResponseDto.created(
 				sitUpService.postFeedback(AuthenticationUtil.getSoldierId(authentication), postFeedbackDto)));
 	}
 }
