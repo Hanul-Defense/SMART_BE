@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.request.PostFeedbackDto;
-import org.example.smart.dto.response.ResponseEstimationRecordDto;
+import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 
 public interface EstimationService {
 	String postEstimation(Long soldierId, PostEstimationDto postEstimationDto);
 
-	List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId);
+	List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId);
 
-	ResponseEstimationRecordDto getEstimationRecord(Long estimationId);
+	ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId);
 
 	String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto);
 }

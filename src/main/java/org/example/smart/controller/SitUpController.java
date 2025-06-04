@@ -5,7 +5,7 @@ import java.util.List;
 import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.request.PostFeedbackDto;
-import org.example.smart.dto.response.ResponseEstimationRecordDto;
+import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 import org.example.smart.service.SitUpService;
 import org.example.smart.util.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,7 +32,7 @@ public class SitUpController {
 	private final SitUpService sitUpService;
 
 	@GetMapping
-	public ResponseEntity<BaseResponseDto<List<ResponseEstimationRecordDto>>> getPushUpList(
+	public ResponseEntity<BaseResponseDto<List<ResponseRecordWithFeedbackDto>>> getPushUpList(
 		Authentication authentication
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
@@ -52,7 +52,7 @@ public class SitUpController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<BaseResponseDto<ResponseEstimationRecordDto>> getPushUpRecord(
+	public ResponseEntity<BaseResponseDto<ResponseRecordWithFeedbackDto>> getPushUpRecord(
 		@PathVariable("id") Long pushUpId
 	) {
 		return ResponseEntity.status(HttpStatus.OK)

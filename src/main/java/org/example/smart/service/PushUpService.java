@@ -9,7 +9,7 @@ import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.request.PostFeedbackDto;
-import org.example.smart.dto.response.ResponseEstimationRecordDto;
+import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
 import org.example.smart.repository.PushUpFeedbackRepository;
@@ -63,24 +63,19 @@ public class PushUpService implements EstimationService {
 	}
 
 	@Override
-	public List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId) {
+	public List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<PushUp> pushUpList = pushUpRepository.getPushUpsBySoldier(soldier);
 
 		return pushUpList.stream()
-			.map(
-				pushUp -> ResponseEstimationRecordDto.of(pushUp.getStandard().getEvaluationCategory().getCategoryName(),
-					pushUp.getCount(), pushUp.getStandard().getStandardRank().getRankName(), pushUp.getSummary(),
-					pushUp.getEvaluationType(), pushUp.getEvaluationDate())
-			).toList();
+			.map(ResponseRecordWithFeedbackDto::fromPushUp).toList();
 	}
 
 	@Override
-	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
+	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
-		return ResponseEstimationRecordDto.of(pushUp.getStandard().getEvaluationCategory().getCategoryName(),
-			pushUp.getCount(), pushUp.getStandard().getStandardRank().getRankName(), pushUp.getSummary(),
-			pushUp.getEvaluationType(), pushUp.getEvaluationDate());
+
+		return ResponseRecordWithFeedbackDto.fromPushUp(pushUp);
 	}
 
 	@Override

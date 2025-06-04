@@ -9,7 +9,7 @@ import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.dto.request.PostFeedbackDto;
-import org.example.smart.dto.response.ResponseEstimationRecordDto;
+import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
 import org.example.smart.repository.SitUpFeedbackRepository;
@@ -63,23 +63,16 @@ public class SitUpService implements EstimationService {
 	}
 
 	@Override
-	public List<ResponseEstimationRecordDto> getEstimationRecordList(Long soldierId) {
+	public List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<SitUp> sitUpList = sitUpRepository.getSitUpsBySoldier(soldier);
-		return sitUpList.stream()
-			.map(sitUp ->
-				ResponseEstimationRecordDto.of(sitUp.getStandard().getEvaluationCategory().getCategoryName(),
-					sitUp.getCount(), sitUp.getStandard().getStandardRank().getRankName(), sitUp.getSummary(),
-					sitUp.getEvaluationType(), sitUp.getEvaluationDate())
-			).toList();
+		return sitUpList.stream().map(ResponseRecordWithFeedbackDto::fromSitUp).toList();
 	}
 
 	@Override
-	public ResponseEstimationRecordDto getEstimationRecord(Long estimationId) {
+	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		SitUp sitUp = sitUpRepository.findById(estimationId).orElseThrow();
-		return ResponseEstimationRecordDto.of(sitUp.getStandard().getEvaluationCategory().getCategoryName(),
-			sitUp.getCount(), sitUp.getStandard().getStandardRank().getRankName(), sitUp.getSummary(),
-			sitUp.getEvaluationType(), sitUp.getEvaluationDate());
+		return ResponseRecordWithFeedbackDto.fromSitUp(sitUp);
 	}
 
 	@Override
