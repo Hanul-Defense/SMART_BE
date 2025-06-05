@@ -21,6 +21,7 @@ import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,11 +36,11 @@ public class PushUpService implements EstimationService {
 	private final StandardRepository standardRepository;
 
 	@Override
+	@Transactional
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		log.info("postEstimation Service in");
-		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
-			"Soldier not found for soldierId=" + soldierId
-		));
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
 				EvaluationCategory.PUSH_UP)
@@ -72,6 +73,26 @@ public class PushUpService implements EstimationService {
 	}
 
 	@Override
+	@Transactional
+	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
+		PushUp pushUp = pushUpRepository.findPushUpByEvaluationDate(postEstimationDto.evaluationDate().toLocalDate())
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
+		if (pushUp.getCount() < postEstimationDto.count()) {
+			return updateEstimation(pushUp, postEstimationDto);
+		}
+		throw new GlobalException(ErrorCode.BAD_REQUEST);
+	}
+
+	private String updateEstimation(PushUp pushUp, PostEstimationDto postEstimationDto) {
+		PushUpFeedback feedback = pushUp.getPushUpFeedback();
+		if (feedback != null) {
+			pushUpFeedbackRepository.delete(feedback);
+		}
+		pushUp.updateRecord(postEstimationDto);
+		return "최고기록을 변경했습니다.";
+	}
+
+	@Override
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
 
@@ -79,6 +100,7 @@ public class PushUpService implements EstimationService {
 	}
 
 	@Override
+	@Transactional
 	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		PushUp pushUp = pushUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();

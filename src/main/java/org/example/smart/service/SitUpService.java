@@ -2,6 +2,8 @@ package org.example.smart.service;
 
 import java.util.List;
 
+import org.example.smart.domain.PushUp;
+import org.example.smart.domain.PushUpFeedback;
 import org.example.smart.domain.SitUp;
 import org.example.smart.domain.SitUpFeedback;
 import org.example.smart.domain.Soldier;
@@ -21,6 +23,7 @@ import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +38,7 @@ public class SitUpService implements EstimationService {
 	private final StandardRepository standardRepository;
 
 	@Override
+	@Transactional
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		log.info("postEstimation Service in");
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
@@ -70,12 +74,33 @@ public class SitUpService implements EstimationService {
 	}
 
 	@Override
+	@Transactional
+	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
+		SitUp sitUp = sitUpRepository.findSitUpByEvaluationDate(postEstimationDto.evaluationDate().toLocalDate())
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
+		if (sitUp.getCount() < postEstimationDto.count()) {
+			return updateEstimation(sitUp, postEstimationDto);
+		}
+		throw new GlobalException(ErrorCode.BAD_REQUEST);
+	}
+
+	private String updateEstimation(SitUp sitUp, PostEstimationDto postEstimationDto) {
+		SitUpFeedback feedback = sitUp.getSitUpFeedback();
+		if (feedback != null) {
+			sitUpFeedbackRepository.delete(feedback);
+		}
+		sitUp.updateRecord(postEstimationDto);
+		return "최고기록을 변경했습니다.";
+	}
+
+	@Override
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		SitUp sitUp = sitUpRepository.findById(estimationId).orElseThrow();
 		return ResponseRecordWithFeedbackDto.fromSitUp(sitUp);
 	}
 
 	@Override
+	@Transactional
 	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		SitUp sitUp = sitUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();

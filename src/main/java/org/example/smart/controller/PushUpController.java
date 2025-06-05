@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,16 @@ public class PushUpController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(BaseResponseDto.created(
 				pushUpService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
+	}
+
+	@PatchMapping()
+	public ResponseEntity<BaseResponseDto<?>> pathPushU(
+		@RequestBody PostEstimationDto postEstimationDto,
+		Authentication authentication
+	) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(BaseResponseDto.ok(
+				pushUpService.patchEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
 	}
 
 	@GetMapping("/{id}")
