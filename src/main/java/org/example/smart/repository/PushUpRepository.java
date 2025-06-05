@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface PushUpRepository extends JpaRepository<PushUp, Long> {
 	List<PushUp> getPushUpsBySoldier(Soldier soldier);
 
-	@Query("select p from PushUp p where function('DATE',p.evaluationDate)=:date")
-	Optional<PushUp> findPushUpByEvaluationDate(LocalDate date);
+	@Query("select p from PushUp p where p.soldier=:soldier and function('DATE',p.evaluationDate)=:date")
+	Optional<PushUp> findPushUpBySoldierAndEvaluationDate(Soldier soldier, LocalDate date);
 
 }

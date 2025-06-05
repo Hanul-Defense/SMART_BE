@@ -1,6 +1,7 @@
 package org.example.smart.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.example.smart.domain.PushUp;
 import org.example.smart.domain.PushUpFeedback;
@@ -41,11 +42,14 @@ public class PushUpService implements EstimationService {
 		log.info("postEstimation Service in");
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
+		Optional<PushUp> optionalPushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
+			postEstimationDto.evaluationDate().toLocalDate());
+		if (optionalPushUp.isPresent())
+			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
 				EvaluationCategory.PUSH_UP)
-			.orElseThrow(() -> new RuntimeException(
-				"Standard not found for age=" + age + ", count=" + postEstimationDto.count()));
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		try {
 			PushUp pushUp = PushUp.builder()
 				.soldier(soldier)
@@ -75,7 +79,10 @@ public class PushUpService implements EstimationService {
 	@Override
 	@Transactional
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
-		PushUp pushUp = pushUpRepository.findPushUpByEvaluationDate(postEstimationDto.evaluationDate().toLocalDate())
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.BAD_REQUEST));
+		PushUp pushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
+				postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (pushUp.getCount() < postEstimationDto.count()) {
 			return updateEstimation(pushUp, postEstimationDto);

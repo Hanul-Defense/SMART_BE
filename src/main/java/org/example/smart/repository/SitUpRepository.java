@@ -16,6 +16,6 @@ public interface SitUpRepository extends JpaRepository<SitUp, Long> {
 
 	List<SitUp> getSitUpsBySoldier(Soldier soldier);
 
-	@Query("select s from SitUp s where function('DATE',p.evaluationDate)=:date")
-	Optional<SitUp> findSitUpByEvaluationDate(LocalDate date);
+	@Query("select s from SitUp s where s.soldier=:soldier and function('DATE',s.evaluationDate)=:date")
+	Optional<SitUp> findSitUpBySoldierAndEvaluationDate(Soldier soldier, LocalDate date);
 }

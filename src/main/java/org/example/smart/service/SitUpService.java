@@ -1,9 +1,8 @@
 package org.example.smart.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.example.smart.domain.PushUp;
-import org.example.smart.domain.PushUpFeedback;
 import org.example.smart.domain.SitUp;
 import org.example.smart.domain.SitUpFeedback;
 import org.example.smart.domain.Soldier;
@@ -41,9 +40,12 @@ public class SitUpService implements EstimationService {
 	@Transactional
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		log.info("postEstimation Service in");
-		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow(() -> new RuntimeException(
-			"Soldier not found for soldierId=" + soldierId
-		));
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		Optional<SitUp> optionalSitUp = sitUpRepository.findSitUpBySoldierAndEvaluationDate(soldier,
+			postEstimationDto.evaluationDate().toLocalDate());
+		if (optionalSitUp.isPresent())
+			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
 				EvaluationCategory.PUSH_UP)
@@ -76,7 +78,10 @@ public class SitUpService implements EstimationService {
 	@Override
 	@Transactional
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
-		SitUp sitUp = sitUpRepository.findSitUpByEvaluationDate(postEstimationDto.evaluationDate().toLocalDate())
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		SitUp sitUp = sitUpRepository.findSitUpBySoldierAndEvaluationDate(soldier,
+				postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (sitUp.getCount() < postEstimationDto.count()) {
 			return updateEstimation(sitUp, postEstimationDto);
