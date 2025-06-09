@@ -53,7 +53,7 @@ public class PushUpController {
 	}
 
 	@PatchMapping()
-	public ResponseEntity<BaseResponseDto<?>> pathPushU(
+	public ResponseEntity<BaseResponseDto<?>> patchPushUp(
 		@RequestBody PostEstimationDto postEstimationDto,
 		Authentication authentication
 	) {

@@ -80,7 +80,7 @@ public class PushUpService implements EstimationService {
 	@Transactional
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		Soldier soldier = soldierRepository.findById(soldierId)
-			.orElseThrow(() -> new GlobalException(ErrorCode.BAD_REQUEST));
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
 		PushUp pushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
 				postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
