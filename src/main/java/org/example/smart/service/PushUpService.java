@@ -47,13 +47,13 @@ public class PushUpService implements EstimationService {
 		if (optionalPushUp.isPresent())
 			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
-		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
+		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.record(),
 				EvaluationCategory.PUSH_UP)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		try {
 			PushUp pushUp = PushUp.builder()
 				.soldier(soldier)
-				.count(postEstimationDto.count())
+				.count(postEstimationDto.record())
 				.standard(standard)
 				.evaluationType(postEstimationDto.evaluationType())
 				.evaluationDate(postEstimationDto.evaluationDate())
@@ -84,7 +84,7 @@ public class PushUpService implements EstimationService {
 		PushUp pushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
 				postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
-		if (pushUp.getCount() < postEstimationDto.count()) {
+		if (pushUp.getCount() < postEstimationDto.record()) {
 			return updateEstimation(pushUp, postEstimationDto);
 		}
 		throw new GlobalException(ErrorCode.BAD_REQUEST);

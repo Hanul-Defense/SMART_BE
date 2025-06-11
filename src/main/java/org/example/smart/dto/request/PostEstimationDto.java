@@ -7,8 +7,8 @@ import org.example.smart.domain.enums.EvaluationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record PostEstimationDto(
-	@JsonProperty(value = "count")
-	Integer count,
+	@JsonProperty(value = "record")
+	Integer record,
 
 	@JsonProperty(value = "summary")
 	String summary,

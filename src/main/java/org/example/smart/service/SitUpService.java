@@ -47,14 +47,14 @@ public class SitUpService implements EstimationService {
 		if (optionalSitUp.isPresent())
 			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
-		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.count(),
+		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.record(),
 				EvaluationCategory.PUSH_UP)
 			.orElseThrow(() -> new RuntimeException(
-				"Standard not found for age=" + age + ", count=" + postEstimationDto.count()));
+				"Standard not found for age=" + age + ", record=" + postEstimationDto.record()));
 		try {
 			SitUp sitUp = SitUp.builder()
 				.soldier(soldier)
-				.count(postEstimationDto.count())
+				.count(postEstimationDto.record())
 				.standard(standard)
 				.evaluationType(postEstimationDto.evaluationType())
 				.evaluationDate(postEstimationDto.evaluationDate())
@@ -83,7 +83,7 @@ public class SitUpService implements EstimationService {
 		SitUp sitUp = sitUpRepository.findSitUpBySoldierAndEvaluationDate(soldier,
 				postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
-		if (sitUp.getCount() < postEstimationDto.count()) {
+		if (sitUp.getCount() < postEstimationDto.record()) {
 			return updateEstimation(sitUp, postEstimationDto);
 		}
 		throw new GlobalException(ErrorCode.BAD_REQUEST);

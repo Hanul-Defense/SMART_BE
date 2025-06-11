@@ -40,7 +40,7 @@ public class SitUp {
 	@JoinColumn(name = "standard_id", nullable = false)
 	private Standard standard;
 
-	@Column(name = "count", nullable = false)
+	@Column(name = "record", nullable = false)
 	private Integer count;
 
 	@Column(name = "summary", nullable = true, length = 500)
@@ -68,8 +68,8 @@ public class SitUp {
 	}
 
 	public void updateRecord(PostEstimationDto postEstimationDto) {
-		if (this.count < postEstimationDto.count()) {
-			this.count = postEstimationDto.count();
+		if (this.count < postEstimationDto.record()) {
+			this.count = postEstimationDto.record();
 			this.summary = postEstimationDto.summary();
 			this.evaluationDate = postEstimationDto.evaluationDate();
 			this.sitUpFeedback = null;

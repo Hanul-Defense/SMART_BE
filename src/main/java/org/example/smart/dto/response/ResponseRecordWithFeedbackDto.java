@@ -20,7 +20,7 @@ public record ResponseRecordWithFeedbackDto(
 	@JsonProperty(value = "category_name")
 	String categoryName,
 
-	@JsonProperty(value = "count")
+	@JsonProperty(value = "record")
 	Integer count,
 
 	@JsonProperty(value = "rank")
