@@ -3,11 +3,8 @@ package org.example.smart.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.example.smart.domain.PushUp;
-import org.example.smart.domain.PushUpFeedback;
 import org.example.smart.domain.Running;
 import org.example.smart.domain.RunningFeedback;
-import org.example.smart.domain.SitUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
@@ -107,7 +104,23 @@ public class RunningService implements EstimationService {
 	}
 
 	@Override
+	@Transactional
 	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
-		return "";
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		Running running = runningRepository.findById(postFeedbackDto.estimationId())
+			.orElseThrow(() -> new GlobalException(ErrorCode.BAD_REQUEST));
+		try {
+			RunningFeedback feedback = RunningFeedback.builder()
+				.running(running)
+				.soldier(soldier)
+				.feedbackContent(postFeedbackDto.feedback())
+				.build();
+
+			runningFeedbackRepository.save(feedback);
+			return "등록을 성공했습니다.";
+		} catch (Exception e) {
+			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, "저장이 되지 않았습니다.");
+		}
 	}
 }

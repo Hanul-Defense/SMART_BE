@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.request.PostEstimationDto;
+import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 import org.example.smart.service.RunningService;
 import org.example.smart.util.AuthenticationUtil;
@@ -64,5 +65,15 @@ public class RunningController {
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(BaseResponseDto.ok(runningService.getEstimationRecord(runningId)));
+	}
+
+	@PostMapping("/feedback")
+	public ResponseEntity<BaseResponseDto<?>> postFeedback(
+		@RequestBody PostFeedbackDto postFeedbackDto,
+		Authentication authentication
+	) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(BaseResponseDto.created(
+				runningService.postFeedback(AuthenticationUtil.getSoldierId(authentication), postFeedbackDto)));
 	}
 }
