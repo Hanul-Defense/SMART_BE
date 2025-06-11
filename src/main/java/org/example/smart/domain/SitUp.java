@@ -40,7 +40,7 @@ public class SitUp {
 	@JoinColumn(name = "standard_id", nullable = false)
 	private Standard standard;
 
-	@Column(name = "record", nullable = false)
+	@Column(name = "count", nullable = false)
 	private Integer count;
 
 	@Column(name = "summary", nullable = true, length = 500)
