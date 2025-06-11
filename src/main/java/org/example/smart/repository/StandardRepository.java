@@ -19,7 +19,7 @@ public interface StandardRepository extends JpaRepository<Standard, Long> {
 		and s.minAge<=:age and s.maxAge>=:age
 		and s.minValue<=:count and s.maxValue>=:count
 		""")
-	Optional<Standard> findByAgeAndCountAndEvaluationCategory(@Param("age") Integer age, @Param("record") Integer count,
+	Optional<Standard> findByAgeAndCountAndEvaluationCategory(@Param("age") Integer age, @Param("count") Integer count,
 		EvaluationCategory evaluationCategory);
 
 	@Query("select s from Standard s where s.minAge<=:age and s.maxAge>=:age order by s.maxValue desc")
