@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +56,13 @@ public class RunningController {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(BaseResponseDto.ok(
 				runningService.patchEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<BaseResponseDto<ResponseRecordWithFeedbackDto>> getRunningRecord(
+		@PathVariable("id") Long runningId
+	) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(BaseResponseDto.ok(runningService.getEstimationRecord(runningId)));
 	}
 }

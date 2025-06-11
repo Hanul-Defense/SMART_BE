@@ -101,7 +101,8 @@ public class PushUpService implements EstimationService {
 
 	@Override
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
-		PushUp pushUp = pushUpRepository.findById(estimationId).orElseThrow();
+		PushUp pushUp = pushUpRepository.findById(estimationId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 
 		return ResponseRecordWithFeedbackDto.fromPushUp(pushUp);
 	}

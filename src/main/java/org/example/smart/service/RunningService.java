@@ -101,7 +101,9 @@ public class RunningService implements EstimationService {
 
 	@Override
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
-		return null;
+		Running running = runningRepository.findById(estimationId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
+		return ResponseRecordWithFeedbackDto.fromRunning(running);
 	}
 
 	@Override
