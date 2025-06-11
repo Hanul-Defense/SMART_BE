@@ -33,7 +33,7 @@ public class SitUpController {
 	private final SitUpService sitUpService;
 
 	@GetMapping
-	public ResponseEntity<BaseResponseDto<List<ResponseRecordWithFeedbackDto>>> getPushUpList(
+	public ResponseEntity<BaseResponseDto<List<ResponseRecordWithFeedbackDto>>> getSitUpList(
 		Authentication authentication
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
@@ -42,7 +42,7 @@ public class SitUpController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<BaseResponseDto<?>> postPushUp(
+	public ResponseEntity<BaseResponseDto<?>> postSitUp(
 		Authentication authentication,
 		@RequestBody PostEstimationDto postEstimationDto
 	) {
@@ -53,7 +53,7 @@ public class SitUpController {
 	}
 
 	@PatchMapping()
-	public ResponseEntity<BaseResponseDto<?>> pathPushU(
+	public ResponseEntity<BaseResponseDto<?>> patchSitUp(
 		@RequestBody PostEstimationDto postEstimationDto,
 		Authentication authentication
 	) {
@@ -63,7 +63,7 @@ public class SitUpController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<BaseResponseDto<ResponseRecordWithFeedbackDto>> getPushUpRecord(
+	public ResponseEntity<BaseResponseDto<ResponseRecordWithFeedbackDto>> getSitUpRecord(
 		@PathVariable("id") Long pushUpId
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
