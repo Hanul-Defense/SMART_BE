@@ -3,7 +3,10 @@ package org.example.smart.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.smart.domain.PushUp;
+import org.example.smart.domain.PushUpFeedback;
 import org.example.smart.domain.Running;
+import org.example.smart.domain.RunningFeedback;
 import org.example.smart.domain.SitUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
@@ -13,6 +16,7 @@ import org.example.smart.dto.request.PostFeedbackDto;
 import org.example.smart.dto.response.ResponseRecordWithFeedbackDto;
 import org.example.smart.exception.ErrorCode;
 import org.example.smart.exception.GlobalException;
+import org.example.smart.repository.RunningFeedbackRepository;
 import org.example.smart.repository.RunningRepository;
 import org.example.smart.repository.SoldierRepository;
 import org.example.smart.repository.StandardRepository;
@@ -29,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RunningService implements EstimationService {
 	private final RunningRepository runningRepository;
+	private final RunningFeedbackRepository runningFeedbackRepository;
 	private final SoldierRepository soldierRepository;
 	private final StandardRepository standardRepository;
 
@@ -72,8 +77,26 @@ public class RunningService implements EstimationService {
 	}
 
 	@Override
+	@Transactional
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
-		return "";
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		Running running = runningRepository.findRunningBySoldierAndEvaluationDate(soldier,
+				postEstimationDto.evaluationDate().toLocalDate())
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
+		if (running.getTime() < postEstimationDto.record()) {
+			return updateEstimation(running, postEstimationDto);
+		}
+		throw new GlobalException(ErrorCode.BAD_REQUEST);
+	}
+
+	private String updateEstimation(Running running, PostEstimationDto postEstimationDto) {
+		RunningFeedback feedback = running.getRunningFeedback();
+		if (feedback != null) {
+			runningFeedbackRepository.delete(feedback);
+		}
+		running.updateRecord(postEstimationDto);
+		return "최고기록을 변경했습니다.";
 	}
 
 	@Override

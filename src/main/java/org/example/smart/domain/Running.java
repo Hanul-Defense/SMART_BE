@@ -3,6 +3,7 @@ package org.example.smart.domain;
 import java.time.LocalDateTime;
 
 import org.example.smart.domain.enums.EvaluationType;
+import org.example.smart.dto.request.PostEstimationDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,5 +66,14 @@ public class Running {
 		this.summary = summary;
 		this.evaluationType = evaluationType;
 		this.evaluationDate = evaluationDate;
+	}
+
+	public void updateRecord(PostEstimationDto postEstimationDto) {
+		if (this.time < postEstimationDto.record()) {
+			this.time = postEstimationDto.record();
+			this.summary = postEstimationDto.summary();
+			this.evaluationDate = postEstimationDto.evaluationDate();
+			this.runningFeedback = null;
+		}
 	}
 }
