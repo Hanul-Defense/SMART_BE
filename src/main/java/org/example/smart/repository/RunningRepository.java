@@ -1,6 +1,7 @@
 package org.example.smart.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.example.smart.domain.PushUp;
@@ -15,4 +16,7 @@ public interface RunningRepository extends JpaRepository<Running, Long> {
 
 	@Query("select r from Running r where r.soldier=:soldier and function('DATE',r.evaluationDate)=:date")
 	Optional<Running> findRunningBySoldierAndEvaluationDate(Soldier soldier, LocalDate date);
+
+	List<Running> findRunningsBySoldier(Soldier soldier);
+
 }

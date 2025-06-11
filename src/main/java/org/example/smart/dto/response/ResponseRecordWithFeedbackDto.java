@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.example.smart.domain.PushUp;
 import org.example.smart.domain.PushUpFeedback;
+import org.example.smart.domain.Running;
+import org.example.smart.domain.RunningFeedback;
 import org.example.smart.domain.SitUp;
 import org.example.smart.domain.SitUpFeedback;
 import org.example.smart.domain.enums.EvaluationCategory;
@@ -68,6 +70,21 @@ public record ResponseRecordWithFeedbackDto(
 			.feedbackContent(feedback != null ? feedback.getFeedbackContent() : null)
 			.evaluationType(sitUp.getEvaluationType())
 			.evaluationDate(sitUp.getEvaluationDate())
+			.build();
+	}
+
+	public static ResponseRecordWithFeedbackDto fromRunning(Running running) {
+		RunningFeedback feedback = running.getRunningFeedback();
+
+		return ResponseRecordWithFeedbackDto.builder()
+			.categoryName(EvaluationCategory.RUNNING.getCategoryName())
+			.count(running.getTime())
+			.rank(running.getStandard().getStandardRank().getRankName())
+			.summary(running.getSummary())
+			.feedbackWriter(feedback != null ? SoldierUtil.getNameWithRank(feedback.getSoldier()) : null)
+			.feedbackContent(feedback != null ? feedback.getFeedbackContent() : null)
+			.evaluationType(running.getEvaluationType())
+			.evaluationDate(running.getEvaluationDate())
 			.build();
 	}
 }

@@ -5,6 +5,7 @@ import org.example.smart.dto.global.BaseResponseDto;
 import org.example.smart.dto.request.PostEstimationDto;
 import org.example.smart.service.RunningService;
 import org.example.smart.util.AuthenticationUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/runnings")
 public class RunningController {
+
+	@Qualifier("runningService")
 	private final RunningService runningService;
 
 	@PostMapping
-	public ResponseEntity<BaseResponseDto<?>> postEstimation(
+	public ResponseEntity<BaseResponseDto<?>> postRunning(
 		@RequestBody PostEstimationDto postEstimationDto,
 		Authentication authentication
 	) {
@@ -30,4 +33,5 @@ public class RunningController {
 			.body(BaseResponseDto.ok(
 				runningService.postEstimation(AuthenticationUtil.getSoldierId(authentication), postEstimationDto)));
 	}
+
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.example.smart.domain.Running;
+import org.example.smart.domain.SitUp;
 import org.example.smart.domain.Soldier;
 import org.example.smart.domain.Standard;
 import org.example.smart.domain.enums.EvaluationCategory;
@@ -20,6 +21,7 @@ import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,6 +33,7 @@ public class RunningService implements EstimationService {
 	private final StandardRepository standardRepository;
 
 	@Override
+	@Transactional
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
@@ -63,7 +66,9 @@ public class RunningService implements EstimationService {
 
 	@Override
 	public List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId) {
-		return List.of();
+		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
+		List<Running> runningListList = runningRepository.findRunningsBySoldier(soldier);
+		return runningListList.stream().map(ResponseRecordWithFeedbackDto::fromRunning).toList();
 	}
 
 	@Override
