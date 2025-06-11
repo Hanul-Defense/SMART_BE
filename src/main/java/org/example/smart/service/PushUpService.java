@@ -110,8 +110,10 @@ public class PushUpService implements EstimationService {
 	@Override
 	@Transactional
 	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
-		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
-		PushUp pushUp = pushUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		PushUp pushUp = pushUpRepository.findById(postFeedbackDto.estimationId())
+			.orElseThrow(() -> new GlobalException(ErrorCode.BAD_REQUEST));
 		try {
 			PushUpFeedback feedback = PushUpFeedback.builder()
 				.pushUp(pushUp)

@@ -107,8 +107,10 @@ public class SitUpService implements EstimationService {
 	@Override
 	@Transactional
 	public String postFeedback(Long soldierId, PostFeedbackDto postFeedbackDto) {
-		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
-		SitUp sitUp = sitUpRepository.findById(postFeedbackDto.estimationId()).orElseThrow();
+		Soldier soldier = soldierRepository.findById(soldierId)
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+		SitUp sitUp = sitUpRepository.findById(postFeedbackDto.estimationId())
+			.orElseThrow(() -> new GlobalException(ErrorCode.BAD_REQUEST));
 		try {
 			SitUpFeedback feedback = SitUpFeedback.builder()
 				.sitUp(sitUp)
