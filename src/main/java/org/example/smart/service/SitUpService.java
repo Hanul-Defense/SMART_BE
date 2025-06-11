@@ -48,7 +48,7 @@ public class SitUpService implements EstimationService {
 			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.record(),
-				EvaluationCategory.PUSH_UP)
+				EvaluationCategory.SIT_UP)
 			.orElseThrow(() -> new RuntimeException(
 				"Standard not found for age=" + age + ", record=" + postEstimationDto.record()));
 		try {
