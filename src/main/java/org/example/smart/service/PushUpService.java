@@ -21,8 +21,8 @@ import org.example.smart.service.spec.EstimationService;
 import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,8 +42,8 @@ public class PushUpService implements EstimationService {
 		log.info("postEstimation Service in");
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
-		Optional<PushUp> optionalPushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
-			postEstimationDto.evaluationDate().toLocalDate());
+		Optional<PushUp> optionalPushUp = pushUpRepository.findPushUpBySoldierAndEvaluationTypeAndEvaluationDate(
+			soldier, postEstimationDto.evaluationType(), postEstimationDto.evaluationDate().toLocalDate());
 		if (optionalPushUp.isPresent())
 			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
@@ -68,6 +68,7 @@ public class PushUpService implements EstimationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<PushUp> pushUpList = pushUpRepository.getPushUpsBySoldier(soldier);
@@ -81,8 +82,8 @@ public class PushUpService implements EstimationService {
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
-		PushUp pushUp = pushUpRepository.findPushUpBySoldierAndEvaluationDate(soldier,
-				postEstimationDto.evaluationDate().toLocalDate())
+		PushUp pushUp = pushUpRepository.findPushUpBySoldierAndEvaluationTypeAndEvaluationDate(soldier,
+				postEstimationDto.evaluationType(), postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (pushUp.getCount() < postEstimationDto.record()) {
 			return updateEstimation(pushUp, postEstimationDto);
@@ -101,6 +102,7 @@ public class PushUpService implements EstimationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		PushUp pushUp = pushUpRepository.findById(estimationId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));

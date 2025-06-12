@@ -21,8 +21,8 @@ import org.example.smart.service.spec.EstimationService;
 import org.example.smart.util.SoldierUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,8 +39,8 @@ public class RunningService implements EstimationService {
 	public String postEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
-		Optional<Running> optionalRunning = runningRepository.findRunningBySoldierAndEvaluationDate(soldier,
-			postEstimationDto.evaluationDate().toLocalDate());
+		Optional<Running> optionalRunning = runningRepository.findRunningBySoldierAndEvaluationTypeAndEvaluationDate(
+			soldier, postEstimationDto.evaluationType(), postEstimationDto.evaluationDate().toLocalDate());
 		if (optionalRunning.isPresent()) {
 			throw new GlobalException(ErrorCode.ALREADY_REGISTERED);
 		}
@@ -67,6 +67,7 @@ public class RunningService implements EstimationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ResponseRecordWithFeedbackDto> getEstimationRecordList(Long soldierId) {
 		Soldier soldier = soldierRepository.findById(soldierId).orElseThrow();
 		List<Running> runningListList = runningRepository.findRunningsBySoldier(soldier);
@@ -78,8 +79,8 @@ public class RunningService implements EstimationService {
 	public String patchEstimation(Long soldierId, PostEstimationDto postEstimationDto) {
 		Soldier soldier = soldierRepository.findById(soldierId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
-		Running running = runningRepository.findRunningBySoldierAndEvaluationDate(soldier,
-				postEstimationDto.evaluationDate().toLocalDate())
+		Running running = runningRepository.findRunningBySoldierAndEvaluationTypeAndEvaluationDate(soldier,
+				postEstimationDto.evaluationType(), postEstimationDto.evaluationDate().toLocalDate())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (running.getTime() < postEstimationDto.record()) {
 			return updateEstimation(running, postEstimationDto);
@@ -98,6 +99,7 @@ public class RunningService implements EstimationService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ResponseRecordWithFeedbackDto getEstimationRecord(Long estimationId) {
 		Running running = runningRepository.findById(estimationId)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
