@@ -86,8 +86,9 @@ public class PushUpService implements EstimationService {
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (pushUp.getCount() < postEstimationDto.record()) {
 			return updateEstimation(pushUp, postEstimationDto);
+		} else {
+			throw new GlobalException(ErrorCode.NOT_BEST_SCORE);
 		}
-		throw new GlobalException(ErrorCode.BAD_REQUEST);
 	}
 
 	private String updateEstimation(PushUp pushUp, PostEstimationDto postEstimationDto) {

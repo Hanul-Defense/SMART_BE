@@ -85,8 +85,9 @@ public class SitUpService implements EstimationService {
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (sitUp.getCount() < postEstimationDto.record()) {
 			return updateEstimation(sitUp, postEstimationDto);
+		} else {
+			throw new GlobalException(ErrorCode.NOT_BEST_SCORE);
 		}
-		throw new GlobalException(ErrorCode.BAD_REQUEST);
 	}
 
 	private String updateEstimation(SitUp sitUp, PostEstimationDto postEstimationDto) {

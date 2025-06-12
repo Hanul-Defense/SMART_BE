@@ -83,8 +83,9 @@ public class RunningService implements EstimationService {
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 		if (running.getTime() < postEstimationDto.record()) {
 			return updateEstimation(running, postEstimationDto);
+		} else {
+			throw new GlobalException(ErrorCode.NOT_BEST_SCORE);
 		}
-		throw new GlobalException(ErrorCode.BAD_REQUEST);
 	}
 
 	private String updateEstimation(Running running, PostEstimationDto postEstimationDto) {
