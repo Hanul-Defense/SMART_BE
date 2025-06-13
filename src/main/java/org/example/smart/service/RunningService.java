@@ -46,7 +46,7 @@ public class RunningService implements EstimationService {
 		}
 		Integer age = SoldierUtil.getAgeByBirth(soldier.getBirth());
 		Standard standard = standardRepository.findByAgeAndCountAndEvaluationCategory(age, postEstimationDto.record(),
-				EvaluationCategory.PUSH_UP)
+				EvaluationCategory.RUNNING)
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_DATA));
 
 		try {
@@ -56,7 +56,7 @@ public class RunningService implements EstimationService {
 				.standard(standard)
 				.evaluationType(postEstimationDto.evaluationType())
 				.evaluationDate(postEstimationDto.evaluationDate())
-				.summary(postEstimationDto.summary()) // TODO
+				.summary(postEstimationDto.summary())
 				.build();
 
 			runningRepository.save(running);
